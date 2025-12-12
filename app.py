@@ -32,7 +32,18 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
+# Initialize dark mode in session state
+if 'dark_mode' not in st.session_state:
+    st.session_state.dark_mode = False
+
 # Apply Century Gothic font and brand styling with dynamic dark/light mode support
+# Get dark mode state
+dark_mode = st.session_state.dark_mode
+
+# Determine text colors based on mode
+text_color = BRAND_COLORS["white"] if dark_mode else BRAND_COLORS["black"]
+metric_label_color = "#CCCCCC" if dark_mode else BRAND_COLORS["dark_gray"]
+
 st.markdown(
     f"""
     <style>
@@ -43,35 +54,21 @@ st.markdown(
         font-family: 'Century Gothic', sans-serif !important;
     }}
     
-    /* Dark mode detection and text colors */
-    @media (prefers-color-scheme: dark) {{
-        body, [data-testid="stAppViewContainer"], [data-testid="stMarkdownContainer"] p, div, span {{
-            color: {BRAND_COLORS["white"]} !important;
-        }}
-        h1, h2, h3, h4, h5, h6 {{
-            color: {BRAND_COLORS["white"]} !important;
-        }}
-        [data-testid="stMetricValue"] {{
-            color: {BRAND_COLORS["white"]} !important;
-        }}
-        [data-testid="stMetricLabel"] {{
-            color: #CCCCCC !important;
-        }}
+    /* Text colors based on dark/light mode */
+    body, [data-testid="stAppViewContainer"], [data-testid="stMarkdownContainer"] p, div, span {{
+        color: {text_color} !important;
     }}
     
-    @media (prefers-color-scheme: light) {{
-        body, [data-testid="stAppViewContainer"], [data-testid="stMarkdownContainer"] p, div, span {{
-            color: {BRAND_COLORS["black"]} !important;
-        }}
-        h1, h2, h3, h4, h5, h6 {{
-            color: {BRAND_COLORS["black"]} !important;
-        }}
-        [data-testid="stMetricValue"] {{
-            color: {BRAND_COLORS["black"]} !important;
-        }}
-        [data-testid="stMetricLabel"] {{
-            color: {BRAND_COLORS["dark_gray"]} !important;
-        }}
+    h1, h2, h3, h4, h5, h6 {{
+        color: {text_color} !important;
+    }}
+    
+    [data-testid="stMetricValue"] {{
+        color: {text_color} !important;
+    }}
+    
+    [data-testid="stMetricLabel"] {{
+        color: {metric_label_color} !important;
     }}
     
     /* Font styling */
@@ -1339,6 +1336,19 @@ checkout_col       = data.get("checkout_col", None)
 # ----------------------------------------
 # 5. Sidebar filters
 # ----------------------------------------
+# Dark/Light mode toggle
+st.sidebar.markdown("---")
+st.sidebar.markdown("### 🌓 Theme")
+dark_mode_toggle = st.sidebar.toggle(
+    "Dark Mode",
+    value=st.session_state.dark_mode,
+    help="Toggle between dark mode (white text) and light mode (black text)"
+)
+if dark_mode_toggle != st.session_state.dark_mode:
+    st.session_state.dark_mode = dark_mode_toggle
+    st.rerun()
+
+st.sidebar.markdown("---")
 st.sidebar.header("🔎 Global Filters")
 
 # Date filter
