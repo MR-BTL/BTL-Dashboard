@@ -1,169 +1,297 @@
-# 📊 Activation Agents Performance & Data Quality Dashboard
+# Activation Agents Performance Dashboard
 
-A comprehensive Streamlit dashboard for analyzing activation agents' performance, tracking tasks, validating data quality, and monitoring interactions across multiple metrics (DCC, ECC, QR, BBOS).
+A comprehensive Streamlit-based dashboard for monitoring and analyzing activation agents' performance, tracking tasks, validating data quality, and monitoring consumer interactions across multiple metrics.
 
-## 🌟 Features
+## Table of Contents
 
-### Overview
-- **Total & Active/Inactive Agents** tracking
-- **Task Metrics**: DCC, ECC, QR, and BBOS totals
-- **Top 20 Agents** performance chart
-- **Places vs Tasks** analysis
+- [Overview](#overview)
+- [Features](#features)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Usage](#usage)
+- [Data Requirements](#data-requirements)
+- [Deployment](#deployment)
+- [Project Structure](#project-structure)
+- [Technical Details](#technical-details)
+- [Support](#support)
 
-### Performance Metrics
-- Date, Agent, Shift, and Place tracking
-- Check-in/Check-out time monitoring
-- Shift duration categorization (< 1 hour, 1-8 hours, > 8 hours)
-- Automatic shift calculation from check-in/out times
+## Overview
 
-### Data Validation
-- **DCC/ECC/QR/BBOS Validation**: Cross-check between Tasks and Interactions
-- **Stock Validation**: Verify stock usage vs actual interactions
-- **Attendance Validation**: Track agents who logged in but had no interactions
-- Visual mismatch detection with heatmaps and charts
+This dashboard provides real-time insights into activation agents' operations, including task completion rates, interaction metrics, stock utilization, and data quality validations. It integrates seamlessly with Google Sheets as a data source and offers interactive visualizations for comprehensive performance analysis.
 
-### Interactions Analytics
-- Consumer interactions breakdown (DCC, ECC, QR, BBOS)
-- Main vs Occasional brand analysis
-- Gender and age range demographics
-- Pack purchase tracking with ECC item parsing
-- Place-based interaction analysis
-- Photo gallery with AppSheet URL support
+## Features
 
-### Tasks Analytics
-- Detailed tasks table with place information
-- Distance problem detection (> 100m)
-- Status and shift distribution
-- Agent performance summaries
+### Core Functionality
 
-## 🚀 Quick Start
+- **Agent Performance Tracking**: Monitor individual and team performance metrics
+- **Task Management**: Track DCC, ECC, QR, and BBOS task completion
+- **Interaction Analytics**: Analyze consumer interactions by type, brand, demographics, and location
+- **Stock Management**: Monitor stock utilization, returns, and validation against interactions
+- **Data Quality Validation**: Automated cross-validation between tasks and interactions
+- **Distance Analysis**: Track and analyze agent travel distances (in/out distance metrics)
+
+### Dashboard Sections
+
+1. **Overview Dashboard**: High-level KPIs, top performers, and quick insights
+2. **Operations & Performance**: Detailed agent and supervisor performance metrics, shift analysis, and distance analytics
+3. **Interactions & Brands**: Brand performance, consumer demographics, and interaction trends
+4. **Stock & Inventory**: Stock utilization rates, alerts, and detailed inventory tracking
+
+### Advanced Features
+
+- **Comprehensive Filtering**: Filter by date range, agent, zone, area, channel, supervisor, task status, shift duration, place, interaction type, age range, and interaction ID
+- **Data Export**: Download filtered data as CSV or Excel files
+- **Consolidated Reporting**: Single-table summary combining key metrics from all sections
+- **Performance Optimization**: Optimized for large datasets with efficient data processing and display limits
+- **Interactive Visualizations**: Plotly charts with drill-down capabilities
+
+## Installation
 
 ### Prerequisites
-- Python 3.8+
-- Google Sheets with proper permissions ("Anyone with the link can view")
 
-### Installation
+- Python 3.8 or higher
+- Google Sheets with proper sharing permissions ("Anyone with the link can view")
+- Internet connection for Google Sheets access
 
-1. Clone the repository:
-```bash
-git clone https://github.com/MR-BTL/BTL-Dashboard.git
-cd BTL-Dashboard
-```
+### Setup Steps
 
-2. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/MR-BTL/BTL-Dashboard.git
+   cd BTL-Dashboard
+   ```
 
-3. Run the dashboard:
-```bash
-streamlit run app.py
-```
+2. **Create a virtual environment** (recommended):
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
 
-4. Open your browser to `http://localhost:8501`
+3. **Install dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-## 📋 Data Requirements
+4. **Run the dashboard**:
+   ```bash
+   streamlit run app.py
+   ```
+   
+   Or use the helper script:
+   ```bash
+   python run_dashboard.py
+   ```
 
-Your Google Sheets workbook should contain the following sheets:
+5. **Access the dashboard**:
+   - Open your browser to `http://localhost:8501`
+   - The dashboard will open automatically
 
-1. **Users**: user-id, username, zone, area, role
-2. **Login**: user-id, timestamp
-3. **Tasks**: user-id, task-date, DCC, ECC, QR, BBOS, place-name, check-in, check-out, shift, status, in-distance, out-distance
-4. **Stocklog**: agent-name, date, issued, used, returned, balance
-5. **interactions**: user-id, user-name, day, date, Consumer interactions, Gender, Age Range, Main Brand, Pack Purchase, place-name, URL (for photos)
-6. **main**: List of main brands
-7. **purchase**: Purchase records
-
-## 🔧 Configuration
+## Configuration
 
 ### Google Sheets Setup
-1. Share your Google Sheet with "Anyone with the link can view"
-2. Copy the shareable link
-3. Paste it into the dashboard input field
+
+1. Ensure your Google Sheets workbook contains the required sheets (see [Data Requirements](#data-requirements))
+2. Share the Google Sheet with "Anyone with the link can view"
+3. Copy the shareable link from the browser address bar
+4. Paste the URL into the dashboard's sidebar input field
 
 ### Customization
-- Update `BRAND_COLORS` in `app.py` to match your brand colors
-- Modify `LOGO_PATHS` to point to your logo location
-- Adjust `LOGO_WIDTH` for logo sizing
 
-## 📊 Key Metrics Explained
+- **Brand Colors**: Update the `BRAND` dictionary in `app.py` to match your brand colors
+- **Logo**: Place your logo file (`logo.png`, `logo.jpg`, or `logo.jpeg`) in the project root or `assets/` directory
+- **Logo Size**: Adjust `LOGO_WIDTH` in `app.py` to resize the logo display
 
-- **DCC (Direct Consumer Contact)**: Direct interactions with consumers
-- **ECC (Enhanced Consumer Contact)**: Additional items given with purchases (e.g., lighter, cricket)
-- **QR**: QR code scans
-- **BBOS (Branded Bundle of Stock)**: Pack purchases with additional items (identified by "+" in Pack Purchase field)
+## Usage
 
-## 🎨 Features Highlights
+### Basic Workflow
 
-### Filters
-- Date range
-- Agent name
-- Zone & Area
-- Place name/code
-- Interaction ID search
-- Shift duration categories
+1. **Load Data**: Paste your Google Sheets URL in the sidebar
+2. **Apply Filters**: Use the sidebar filters to narrow down your analysis
+3. **Navigate Tabs**: Explore different sections using the tab navigation
+4. **Export Data**: Use download buttons to export filtered data
+5. **View Details**: Expand sections to see detailed tables and charts
 
-### Export
-- Download validation reports as Excel
-- Filtered data export
-- Per-metric validation files
+### Filtering
 
-### Visual Analytics
-- Interactive Plotly charts
-- Color-coded validation status
-- Heatmaps for trend analysis
-- Time-series graphs
-- Distribution pie charts
+All filters work together to provide a comprehensive view:
+- **Date Range**: Filter data by specific date ranges
+- **Agent Selection**: Focus on specific agents or teams
+- **Geographic Filters**: Filter by zone, area, or specific places
+- **Task Filters**: Filter by status or shift duration
+- **Interaction Filters**: Filter by type, age range, or search by ID
 
-## 🌐 Deployment
+### Performance Tips
 
-### Streamlit Community Cloud (Free)
+- For large datasets (>10,000 rows), the dashboard automatically optimizes display
+- Tables show up to 1,000 rows by default (use download for full data)
+- Charts are optimized to show up to 5,000 data points
+- Filters are applied efficiently to minimize processing time
 
-1. Push your code to GitHub
-2. Go to [share.streamlit.io](https://share.streamlit.io)
-3. Sign in with GitHub
-4. Click "New app"
-5. Select your repository: `MR-BTL/BTL-Dashboard`
-6. Main file: `app.py`
-7. Click "Deploy"
+## Data Requirements
 
-Your dashboard will be live at: `https://your-app-name.streamlit.app`
+Your Google Sheets workbook must contain the following sheets with specified columns:
 
-## 📁 Project Structure
+### Required Sheets
+
+1. **Users**
+   - `user-id` or `user_id`: Unique user identifier
+   - `username`: Agent username
+   - `zone`: Geographic zone
+   - `area`: Area within zone
+   - `channel`: Channel assignment
+   - `sv`: Supervisor name
+   - `role`: User role
+
+2. **Tasks**
+   - `user-id` or `user_id`: Agent identifier
+   - `task-date` or `task_date`: Task date
+   - `place-name` or `place_name`: Location name
+   - `place-code` or `place_code`: Location code
+   - `status`: Task status (completed, pending, in progress)
+   - `check-in-time` or `check_in_time`: Check-in timestamp
+   - `check-out-time` or `check_out_time`: Check-out timestamp
+   - `DCC`, `ECC`, `QR`, `BBOS`: Task type counts
+   - `in-distance` or `in_distance`: Distance to location (optional)
+   - `out-distance` or `out_distance`: Distance from location (optional)
+
+3. **interactions**
+   - `user-id` or `user_id`: Agent identifier
+   - `user-name` or `user_name`: Agent name
+   - `day` or `date`: Interaction date
+   - `Consumer interactions` or `consumer_interactions`: Interaction type
+   - `Gender`: Consumer gender
+   - `Age Range`: Consumer age range
+   - `Main Brand`: Brand name
+   - `Pack Purchase`: Purchase details
+   - `place-name` or `place_name`: Location name
+   - `URL`: Photo URL (optional)
+
+4. **Stocklog**
+   - `agent-name` or `agent_name`: Agent identifier
+   - `date`: Stock transaction date
+   - Transaction columns: `issued`, `used`, `returned`, `balance`
+   - Transaction type: `release`, `back`, `used` (or aliases)
+
+### Optional Sheets
+
+- **sv-tasks**: Supervisor task assignments
+- **Login**: User login timestamps
+- **main**: Brand master list
+- **purchase**: Purchase records
+
+### Key Metrics Explained
+
+- **DCC (Direct Consumer Contact)**: Direct face-to-face interactions with consumers
+- **ECC (Enhanced Consumer Contact)**: Additional items provided with purchases (e.g., lighter, cricket accessories)
+- **QR**: QR code scans for digital engagement
+- **BBOS (Branded Bundle of Stock)**: Pack purchases with additional branded items (identified by "+" in Pack Purchase field)
+
+## Deployment
+
+### Streamlit Community Cloud (Free Hosting)
+
+1. **Prepare Your Repository**:
+   - Ensure all code is committed and pushed to GitHub
+   - Repository must be public for free tier
+   - Verify `app.py` and `requirements.txt` are in the root directory
+
+2. **Deploy**:
+   - Visit [Streamlit Community Cloud](https://share.streamlit.io)
+   - Sign in with your GitHub account
+   - Click "New app"
+   - Configure:
+     - **Repository**: Select your repository
+     - **Branch**: `main` (or your default branch)
+     - **Main file path**: `app.py`
+     - **App URL**: Choose a custom subdomain (optional)
+   - Click "Deploy"
+
+3. **Access Your App**:
+   - Your app will be available at `https://your-app-name.streamlit.app`
+   - Changes pushed to GitHub automatically trigger redeployment
+
+### Important Deployment Notes
+
+- ⚠️ **Public Repository Required**: Free tier requires public GitHub repository
+- 🔒 **Security**: Never commit API keys or secrets. Use Streamlit secrets management if needed
+- 📊 **Google Sheets**: Ensure sheets are shared with "Anyone with the link can view"
+- 🚀 **Auto-Deploy**: Changes are automatically deployed when pushed to GitHub
+
+### Troubleshooting Deployment
+
+**Deployment Fails**:
+- Check deployment logs in Streamlit Community Cloud dashboard
+- Verify all dependencies in `requirements.txt` are correct
+- Ensure `app.py` has no syntax errors
+- Confirm repository is public
+
+**App Crashes**:
+- Check logs tab in Streamlit dashboard
+- Verify Google Sheets URLs are accessible
+- Ensure all required Python packages are in `requirements.txt`
+- Check that data sheets contain required columns
+
+## Project Structure
 
 ```
 BTL-Dashboard/
-├── app.py                 # Main dashboard application
-├── requirements.txt       # Python dependencies
-├── logo.png              # Company logo (optional)
-├── README.md             # This file
-├── Dashboard-guide.pages # User guide
-└── .gitignore           # Git ignore rules
+├── app.py                    # Main dashboard application
+├── requirements.txt          # Python dependencies
+├── run_dashboard.py         # Helper script to run dashboard
+├── README.md                # This documentation
+├── .gitignore               # Git ignore rules
+├── .streamlit/
+│   └── config.toml          # Streamlit configuration
+├── .devcontainer/
+│   └── devcontainer.json    # Development container configuration
+└── logo.png                 # Company logo (optional)
 ```
 
-## 🛠️ Tech Stack
+## Technical Details
 
-- **Streamlit**: Web framework
-- **Pandas**: Data processing
-- **Plotly**: Interactive visualizations
-- **OpenPyXL**: Excel file handling
-- **Pillow**: Image processing
-- **Requests**: HTTP requests for Google Sheets
+### Technology Stack
 
-## 📝 License
+- **Streamlit**: Web framework for building interactive dashboards
+- **Pandas**: Data manipulation and analysis
+- **NumPy**: Numerical computing
+- **Plotly**: Interactive data visualizations
+- **OpenPyXL**: Excel file reading and writing
+- **Requests**: HTTP library for Google Sheets access
+- **Pillow**: Image processing for logo display
 
-This project is proprietary software for internal use.
+### Performance Optimizations
 
-## 👥 Support
+- **Data Type Optimization**: Automatic conversion to efficient data types (categories, downcasted numerics)
+- **Efficient Filtering**: Vectorized operations and optimized filter chaining
+- **Display Limits**: Tables limited to 1,000 rows, charts to 5,000 points
+- **Memory Management**: Optimized DataFrame operations to reduce memory usage
+- **Caching**: Streamlit caching for data loading (10-minute TTL)
 
-For issues or questions, please contact the development team or create an issue in the repository.
+### Data Processing
 
-## 🔄 Updates
+- **Robust Column Detection**: Handles various column name formats and aliases
+- **Date Parsing**: Flexible date format handling (multiple formats supported)
+- **Data Validation**: Cross-validation between tasks and interactions
+- **Error Handling**: Graceful handling of missing data and format variations
 
-Check the repository for the latest updates and improvements.
+## Support
+
+### Getting Help
+
+- **Documentation**: Refer to this README for detailed information
+- **Issues**: Report bugs or request features via GitHub Issues
+- **Questions**: Contact the development team for assistance
+
+### Contributing
+
+This is an internal project. For contributions or modifications, please coordinate with the development team.
+
+## License
+
+This project is proprietary software for internal use only.
 
 ---
 
-**Built with ❤️ for Activation Agents Performance Tracking**
+**Built for Activation Agents Performance Tracking**
 
-
+*Last Updated: February 2026*
